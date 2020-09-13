@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 3.13)
 project(spl LANGUAGES C)
 
 if(NOT DEFINED SPL_DEVICE_ID)
-    error("SPL_DEVICE_ID should be defined!")
+    message(FATAL_ERROR "SPL_DEVICE_ID should be defined!")
 else()
     if(SPL_DEVICE_ID EQUAL 0)
-        error("Selected SPL_DEVICE_ID is not permitted (Broadcast ID)!")
+        message(FATAL_ERROR "Selected SPL_DEVICE_ID is not permitted (Broadcast ID)!")
     endif()
 endif()
 

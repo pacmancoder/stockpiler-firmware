@@ -1,9 +1,14 @@
 set(CMAKE_SYSTEM_NAME Generic)
 
 if (DEFINED ENV{SDCC_ROOT})
+    message("Using defined SDCC_ROOT")
     file(TO_CMAKE_PATH "$ENV{SDCC_ROOT}" SDCC_ROOT_VAR)
 
-    set(CMAKE_C_COMPILER "${SDCC_ROOT_VAR}/bin/sdcc.exe")
+    if (WIN32)
+    	set(CMAKE_C_COMPILER "${SDCC_ROOT_VAR}/bin/sdcc.exe")
+    else()
+    	set(CMAKE_C_COMPILER "${SDCC_ROOT_VAR}/bin/sdcc")
+    endif()
     set(CMAKE_FIND_ROOT_PATH "${SDCC_ROOT_VAR}")
 else()
     set(CMAKE_C_COMPILER sdcc)
