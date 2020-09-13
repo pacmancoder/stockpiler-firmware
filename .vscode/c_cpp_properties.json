@@ -1,0 +1,12 @@
+{
+    "configurations":
+    [
+        {
+            "name": "pms150c",
+            "configurationProvider": "ms-vscode.cmake-tools",
+            "includePath": ["${env:SDCC_ROOT}/include", "${workspaceFolder}/**"],
+            "defines": ["PMS150C", "F_CPU=8000000"]
+        }
+    ],
+    "version": 4
+}

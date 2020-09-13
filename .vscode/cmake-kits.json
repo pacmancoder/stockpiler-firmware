@@ -1,0 +1,6 @@
+[
+    {
+        "name": "sdcc",
+        "toolchainFile": "Toolchain-sdcc.cmake"
+    }
+]

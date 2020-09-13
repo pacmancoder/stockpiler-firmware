@@ -1,0 +1,8 @@
+{
+    "cmake.configureSettings": {
+        "SPL_DEVICE_ID": 4096
+    },
+    "files.associations": {
+        "device_state.h": "c"
+    }
+}
