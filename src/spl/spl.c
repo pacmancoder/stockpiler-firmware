@@ -2,19 +2,20 @@
 #include <spl/spl.h>
 #include <spl/timings.h>
 #include <spl/device_state.h>
+#include <spl/loop.h>
 
-void main(void) {	
+void main(void) {
     // >>> IO Initialization
 	// LED RED; Sink output; Default value: 1
 	// LED BLU; Sink output; Default value: 1
 	// LED GRN; Sink output; Default value: 1
 	// SPL BUS; Input/[Output]; Open drain; Default value: 1
-	// ALT ADR; Input; With pull up; Default value: 0
+	// DBG PIN; Output; Default value: 0
 	// SPL BTN; Input; With pull up; Default value: 0
 
-	PAPH = (1 << SPL_PIN_BUTTON) | (1 << SPL_PIN_ALT_ADDRESS);
+	PAPH = ((uint8_t)1 << SPL_PIN_BUTTON);
     PA = (1 << SPL_PIN_LED_R) | (1 << SPL_PIN_LED_G) | (1 << SPL_PIN_LED_B) | (1 << SPL_PIN_BUS);
-    PAC = (1 << SPL_PIN_LED_R) | (1 << SPL_PIN_LED_G) | (1 << SPL_PIN_LED_B);
+    PAC = (1 << SPL_PIN_LED_R) | (1 << SPL_PIN_LED_G) | (1 << SPL_PIN_LED_B) | (1 << SPL_PIN_DEBUG);
     PADIER = (1 << SPL_PIN_BUS) | (1 << SPL_PIN_BUTTON);
 
 	// >>> Initialize peripherals

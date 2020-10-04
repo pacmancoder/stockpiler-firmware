@@ -1,6 +1,6 @@
 {
     "cmake.configureSettings": {
-        "SPL_DEVICE_ID": 4096
+        "CMAKE_BUILD_TYPE": "Release"
     },
     "files.associations": {
         "device_state.h": "c"

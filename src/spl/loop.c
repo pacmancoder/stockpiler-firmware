@@ -1,3 +1,5 @@
+#include <stdalign.h>
+
 #include <spl/loop.h>
 
 #include <spl/spl.h>
@@ -5,14 +7,14 @@
 #include <spl/device_state.h>
 #include <spl/timings.h>
 
+#ifndef PMS150C
+static volatile uint8_t _alignmentFix;
+#endif
 static volatile uint16_t clocksSpent;
 static volatile uint16_t clocksHigh;
 static volatile uint16_t clocksLow;
 
 uint8_t gRxCommandIsNotBroadcast;
-
-// Error handling
-
 
 void on_idle(void) {
 	if (!(PA & (1 << SPL_PIN_BUTTON))) {
@@ -108,11 +110,12 @@ void on_read_command(void) {
 					goto ERROR;
 				}
 			}
+			
+			cmdByte <<= 1;
 			// [|^|___] -> LOW; [|^^^|_] -> HIGH
 			if (clocksHigh > clocksLow) {
                 cmdByte |= 0x01;
 			}
-            cmdByte <<= 1;
 
 		} while (--bitIndex);
 
@@ -211,6 +214,17 @@ void on_execute_command(void) {
 }
 
 void on_failure(void) {
+
+	while (gErrorCause--)
+	{
+		PA |= (1 << SPL_PIN_DEBUG);
+		__nop(); __nop(); __nop(); __nop();
+		PA &= (1 << SPL_PIN_DEBUG);
+		__nop(); __nop(); __nop(); __nop();
+	}
+	
+	gErrorCause = 0;
+
     WAIT_ERROR;
 	gState = SPL_STATE_IDLE;
 }

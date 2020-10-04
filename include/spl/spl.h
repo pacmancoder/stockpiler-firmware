@@ -17,7 +17,7 @@
 #define SPL_PIN_LED_B 0
 
 #define SPL_PIN_BUTTON 6
-#define SPL_PIN_ALT_ADDRESS 7
+#define SPL_PIN_DEBUG 7
 #define SPL_PIN_BUS 5
 
 typedef enum {
