@@ -6,6 +6,8 @@
 #include <spl/timings.h>
 #include <spl/device_state.h>
 
+static uint16_t tm16Value = 0; 
+
 void reset_timer16_counter(void) {
 	uint8_t timerMode = T16M;
     T16M = T16M_CLK_DISABLE;

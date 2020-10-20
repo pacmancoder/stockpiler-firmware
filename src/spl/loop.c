@@ -7,12 +7,9 @@
 #include <spl/device_state.h>
 #include <spl/timings.h>
 
-#ifndef PMS150C
-static volatile uint8_t _alignmentFix;
-#endif
-static volatile uint16_t clocksSpent;
-static volatile uint16_t clocksHigh;
-static volatile uint16_t clocksLow;
+static uint8_t _alignmentFix;
+static uint16_t tm16Value1;
+static uint16_t tm16Value2;
 
 uint8_t gRxCommandIsNotBroadcast;
 
@@ -44,8 +41,8 @@ void on_bus_activated(void) {
     T16M = T16M_CLK_SYSCLK | T16M_CLK_DIV1 | T16M_INTSRC_15BIT;
 
 	while(1) {
-        __asm__("ldt16 _clocksSpent");
-		if (clocksSpent > CLOCKS_RECEIVE_FAILURE) {
+        __asm__("ldt16 _tm16Value1");
+		if (tm16Value1 > CLOCKS_RECEIVE_FAILURE) {
 			// Detected busy bus; wait unil it is clear
 			gState = SPL_STATE_IDLE;
 			goto WAIT_BUS_CLEAR;
@@ -82,8 +79,6 @@ void on_read_command(void) {
     T16M = T16M_CLK_SYSCLK | T16M_CLK_DIV1 | T16M_INTSRC_15BIT;
 
 	uint8_t cmdByteIdx = SPL_COMMAND_SIZE;
-	clocksHigh = 0;
-	clocksLow = 0;
 
 	gMemPtr = gRxCommand;
 	do {
@@ -94,8 +89,8 @@ void on_read_command(void) {
 			reset_timer16_counter();
 			while (PA & (1 << SPL_PIN_BUS)) {
 				// validate that high signal is not greater than 100us
-                __asm__("ldt16 _clocksHigh");
-				if (clocksHigh > CLOCKS_RECEIVE_FAILURE) {
+                __asm__("ldt16 _tm16Value1");
+				if (tm16Value1 > CLOCKS_RECEIVE_FAILURE) {
 					gErrorCause = SPL_ERR_HIGH_TIMEOUT;
 					goto ERROR;
 				}
@@ -104,8 +99,8 @@ void on_read_command(void) {
 			reset_timer16_counter();
 			while (!(PA & (1 << SPL_PIN_BUS)))  {
 				// validate that low signal is not greater than 100us
-                __asm__("ldt16 _clocksLow");
-				if (clocksLow > CLOCKS_RECEIVE_FAILURE) {
+				__asm__("ldt16 _tm16Value2");
+				if (tm16Value2 > CLOCKS_RECEIVE_FAILURE) {
 					gErrorCause = SPL_ERR_LOW_TIMEOUT;
 					goto ERROR;
 				}
@@ -113,7 +108,7 @@ void on_read_command(void) {
 			
 			cmdByte <<= 1;
 			// [|^|___] -> LOW; [|^^^|_] -> HIGH
-			if (clocksHigh > clocksLow) {
+			if (tm16Value1 > tm16Value2) {
                 cmdByte |= 0x01;
 			}
 

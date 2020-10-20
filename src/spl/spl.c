@@ -3,6 +3,7 @@
 #include <spl/timings.h>
 #include <spl/device_state.h>
 #include <spl/loop.h>
+#include <pdk-utils/calibrate.h>
 
 void main(void) {
     // >>> IO Initialization
@@ -47,6 +48,7 @@ void main(void) {
 unsigned char _sdcc_external_startup(void) {
 	#if F_CPU == 8000000
     	PDK_USE_8MHZ_IHRC_SYSCLOCK();
+		EASY_PDK_CALIBRATE_IHRC(8000000, 5000);
 	#else
 		#error "Invalid F_CPU"
 	#endif
