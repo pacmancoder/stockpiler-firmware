@@ -28,3 +28,8 @@ add_executable(spl-badgie
     "src/spl/device_state.c"
     "src/pdk-utils/delay.c")
 target_include_directories(spl-badgie PUBLIC "include")
+
+add_executable(spl-bridge
+    "src/spl-bridge/firmware.c"
+    "src/pdk-utils/delay.c")
+target_include_directories(spl-bridge PUBLIC "include")

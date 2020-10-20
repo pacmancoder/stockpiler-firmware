@@ -20,6 +20,11 @@
 #define LOOP_CTR_16(cycles)     LOOP_CTR(cycles,9,8)
 #define LOOP_CTR_32(cycles)     LOOP_CTR(cycles,13,12)
 
+#define _delay_cycles(cycles)           \
+	(LOOP_CTR_8(cycles) < 256L) ? \
+	_delay_loop_8((uint8_t)LOOP_CTR_8(cycles)) : \
+	_delay_loop_16((uint16_t)LOOP_CTR_16(cycles))
+
 #define _delay_us(us)           \
 	(LOOP_CTR_8(US_TO_CYCLES(us)) < 256L) ? \
 	_delay_loop_8((uint8_t)LOOP_CTR_8(US_TO_CYCLES(us))) : \
